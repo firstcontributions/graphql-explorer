@@ -21,16 +21,25 @@ class App extends Component {
 
 
   componentDidMount() {
-    if (this.state.authenticated) {
-      return this.setSchema()
-    }
-    return fetch("http://api.firstcontributions.com/v1/session", {
-      credentials: 'include'
-    }).then(res=>{
-      if (res.status < 400) {
-        this.setState({authenticated: true})
-        this.setSchema()
-      }
+    
+    this.setSchema()
+    
+    fetch('http://api.firstcontributions.com/v1/graphql', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: DEFAULT_QUERY,
+      }),
+    }).then((res)=> {
+      res.json().then(data=>{
+        if (data.data.viewer) {
+          this.setState({authenticated: true})
+        }
+      })
     })
   }
   setSchema() {
@@ -122,11 +131,19 @@ class App extends Component {
   }
 
   render() {
-    const {authenticated} = this.state
-    if (authenticated) {
-      const { query, schema } = this.state;
-      return (
+    const { authenticated, query, schema } = this.state;
+    return (
+      <div className='top'>
+        {
+          !authenticated ? 
+          <div className='header'>
+            <a href={encodeURI("http://api.firstcontributions.com/v1/auth/redirect?origin=http://explorer.firstcontributions.com")}>
+            <button className='button'>Login With Github</button>
+            </a>
+          </div>: null
+        }
         <div className="graphiql-container">
+          
           <GraphiQLExplorer
             schema={schema}
             query={query}
@@ -163,15 +180,8 @@ class App extends Component {
             </GraphiQL.Toolbar>
           </GraphiQL>
         </div>
-      );
-    }
-    return (
-      <div>
-        <a href={encodeURI("http://api.firstcontributions.com/v1/auth/redirect")}>
-        <button>Login With Github</button>
-        </a>
       </div>
-    )
+    );
   }
 }
 
