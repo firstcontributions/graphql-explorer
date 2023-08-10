@@ -24,7 +24,7 @@ class App extends Component {
     
     this.setSchema()
     
-    fetch('http://api.firstcontributions.com/v1/graphql', {
+    fetch('http://api.opensource.forum/v1/graphql', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -122,7 +122,7 @@ class App extends Component {
   };
 
   graphQLFetcher(graphQLParams) {
-    return fetch("http://api.firstcontributions.com/v1/graphql", {
+    return fetch("http://api.opensource.forum/v1/graphql", {
       credentials: 'include',
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -137,7 +137,7 @@ class App extends Component {
         {
           !authenticated ? 
           <div className='header'>
-            <a href={encodeURI("http://api.firstcontributions.com/v1/auth/redirect?origin=http://explorer.firstcontributions.com")}>
+            <a href={encodeURI("http://api.opensource.forum/v1/auth/redirect?origin=http://explorer.opensource.forum")}>
             <button className='button'>Login With Github</button>
             </a>
           </div>: null
