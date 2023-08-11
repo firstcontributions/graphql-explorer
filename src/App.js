@@ -46,11 +46,7 @@ class App extends Component {
     this.graphQLFetcher({
       query: getIntrospectionQuery()
     }).then(result => {
-      const editor = this._graphiql.getQueryEditor();
-      editor.setOption("extraKeys", {
-        ...(editor.options.extraKeys || {}),
-        "Shift-Alt-LeftClick": this._handleInspectOperation
-      });
+      
 
       this.setState({ schema: buildClientSchema(result.data) });
       window._state = { schema: buildClientSchema(result.data) };
