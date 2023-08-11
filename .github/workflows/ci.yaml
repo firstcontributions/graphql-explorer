@@ -3,8 +3,10 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
 
@@ -22,7 +24,7 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag gokultp/graphql-explorer:$(date +%s)
-      
+      run: docker build . --file Dockerfile --tag gokultp/graphql-explorer:$IMAGE_TAG
+
     - name: Docker Push
-      run: docker push gokultp/graphql-explorer
+      run: docker push gokultp/graphql-explorer:$IMAGE_TAG
